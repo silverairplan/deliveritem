@@ -4,6 +4,12 @@ import {ListItem, Text, Button} from 'react-native-elements';
 
 export default function OrderReview({navigation, route}) {
   let customerOrder = route.params.order;
+  let restaurantInfo = route.params.restaurant;
+  let profile = route.params.profile;
+
+  console.log('paymentOptions', profile.paymentOptions);
+
+  const card = profile.paymentOptions.cards.find(item => item.default);
   // Will eventually need to grab the restaurant name from order
   let orderSubtotal = 0.0;
   let orderTotal = 0.0;
@@ -16,7 +22,7 @@ export default function OrderReview({navigation, route}) {
     // console.log(customerOrder);
     customerOrder.items.map(orderItem => {
       // console.log(orderItem.itemName);
-      orderSubtotal += parseFloat(orderItem.itemPrice);
+      orderSubtotal += parseFloat(orderItem.price);
     });
     // console.log(orderSubtotal);
   };
@@ -43,6 +49,8 @@ export default function OrderReview({navigation, route}) {
     return options;
   };
 
+  const payment = () => {};
+
   return (
     <>
       <ScrollView style={styles.general}>
@@ -58,9 +66,9 @@ export default function OrderReview({navigation, route}) {
               <ListItem
                 title={orderItem.itemName}
                 titleStyle={styles.orderItemTitle}
-                rightTitle={'$' + orderItem.itemPrice}
-                // subtitle={orderItem.specialInstructions}
-                subtitle={getOptions(orderItem) || false}
+                rightTitle={'$' + orderItem.price}
+                subtitle={orderItem.specialInstructions}
+                //subtitle={getOptions(orderItem) || false}
                 subtitleStyle={styles.orderItemDescription}
                 containerStyle={styles.orderItemContainer}
                 // onPress={() => console.log('Pressed')}
@@ -80,7 +88,10 @@ export default function OrderReview({navigation, route}) {
       </ScrollView>
       {/* <Button title={'Proceed To Checkout $' + orderSubtotal} /> */}
       {/* TODO: CREATE AND NAVIGATE TO PAYMENT SCREEN */}
-      <Button title={'Pay $' + orderSubtotal} />
+      <Button
+        title={'Pay $' + orderSubtotal}
+        buttonStyle={styles.buttonStyle}
+      />
     </>
   );
 }
@@ -116,5 +127,10 @@ const styles = StyleSheet.create({
   },
   orderSubtotal: {
     fontSize: 25,
+  },
+  buttonStyle: {
+    backgroundColor: '#F86D64',
+    paddingTop: 15,
+    paddingBottom: 15,
   },
 });

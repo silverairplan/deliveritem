@@ -42,13 +42,13 @@ export default function MenuDisplay({navigation, route}) {
       // USED TO CLEAR CART IF SWITCHING RESTAURANTS
       if (
         currentOrder.restaurantName !==
-        route.params.restaurant.profile.restaurantInfo.restaurantName
+        route.params.restaurant.Profile.restaurantInfo.restaurantName
       ) {
         setCurrentOrder({
           ...currentOrder,
           items: [],
           restaurantName:
-            route.params.restaurant.profile.restaurantInfo.restaurantName,
+            route.params.restaurant.Profile.restaurantInfo.restaurantName,
         });
       }
       // ADDS ITEM TO ORDER
@@ -66,46 +66,18 @@ export default function MenuDisplay({navigation, route}) {
       }
     }),
   );
+
+  const menu =
+    typeof route.params.restaurant.Menu === 'string'
+      ? JSON.parse(route.params.restaurant.Menu)
+      : route.params.restaurant.Menu;
   return (
     <>
       <ScrollView>
-        {route.params.restaurant.menu.categories.map(category => {
+        {menu.items?.map(item => {
           return (
-            <View key={'category_display_' + category.categoryName}>
-              <View style={styles.menuListView}>
-                <Text h4 style={styles.titles}>
-                  {category.categoryName}
-                </Text>
-              </View>
-              {category.items.map(item => {
-                {
-                  /* CURRENTLY NOT USED - itemTitle - probably for availability feature */
-                }
-                {
-                  /* let itemTitle = '';
-                if (item.available) {
-                  itemTitle = item.itemName + ' $' + item.itemPrice;
-                } else {
-                  itemTitle =
-                    item.itemName +
-                    ' $' +
-                    item.itemPrice +
-                    ' *Not Currently Available*';
-                } */
-                }
-                return (
-                  <View
-                    key={
-                      'category_display_' +
-                      category.categoryName +
-                      '_menu_item_' +
-                      item.itemName +
-                      item.itemPrice
-                    }>
-                    {menuListItemDisplay(item, category, navigation)}
-                  </View>
-                );
-              })}
+            <View key={'_menu_item_' + item.itemName + item.itemPrice}>
+              {menuListItemDisplay(item, navigation)}
             </View>
           );
         })}
@@ -121,8 +93,10 @@ export default function MenuDisplay({navigation, route}) {
             // })
             navigation.navigate('Order Review', {
               order: currentOrder,
+              restaurant: route.params.restaurant.Profile,
             })
           }
+          buttonStyle={styles.buttonStyle}
         />
       ) : null}
     </>
@@ -132,7 +106,7 @@ export default function MenuDisplay({navigation, route}) {
 /*
   TODO: FIX ROUTE PARAMS TO BE CONSISTENT
 */
-const menuListItemDisplay = (item, category, navigation) => {
+const menuListItemDisplay = (item, navigation) => {
   if (item.picture === '') {
     return (
       <ListItem
@@ -143,7 +117,6 @@ const menuListItemDisplay = (item, category, navigation) => {
         onPress={() => {
           navigation.navigate('AddItemToCart', {
             item: item,
-            category: category,
             addToCart: false,
             itemToAdd: null,
           });
@@ -158,24 +131,23 @@ const menuListItemDisplay = (item, category, navigation) => {
       leftAvatar={{source: {uri: item.picture}}}
       bottomDivider
       chevron
-      onPress={navigateToAddItemToCart(item, category, navigation)}
+      onPress={() => navigateToAddItemToCart(item, navigation)}
     />
   );
 };
 
-const navigateToAddItemToCart = (item, category, navigation) => {
+const navigateToAddItemToCart = (item, navigation) => {
   var orderItem = {
     itemName: item.itemName,
-    itemCategory: category,
     itemDescription: item.itemDescription,
     itemQuantity: 1,
     options: [],
     specialInstructions: '',
   };
   navigation.navigate('AddItemToCart', {
+    item,
     menuItem: item,
     orderItem: orderItem,
-    category: category,
     addToCart: false,
   });
 };
@@ -197,5 +169,10 @@ const styles = StyleSheet.create({
   addCategoryIcon: {
     position: 'absolute',
     right: 0,
+  },
+  buttonStyle: {
+    backgroundColor: '#F86D64',
+    paddingTop: 15,
+    paddingBottom: 15,
   },
 });

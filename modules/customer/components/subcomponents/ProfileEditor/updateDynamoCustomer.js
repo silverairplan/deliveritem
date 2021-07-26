@@ -2,9 +2,11 @@ import {Auth} from 'aws-amplify';
 
 export function updateDynamoCustomer(incomingData) {
   Auth.currentUserInfo();
-  updateCustomerProfile(JSON.stringify(incomingData));
+  updateCustomerProfile(incomingData);
   async function updateCustomerProfile(dataToDynamo) {
-    const body = dataToDynamo;
+    const info = await Auth.currentUserInfo();
+    const body = {...dataToDynamo,CustomerId:info.username,restaurant:false};
+    console.log(body)
     let token = null;
     let prom = Auth.currentSession().then(
       info => (token = info.getIdToken().getJwtToken()),
@@ -25,10 +27,10 @@ export function updateDynamoCustomer(incomingData) {
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: body, // body data type must match “Content-Type” header
+        body: JSON.stringify(body), // body data type must match “Content-Type” header
       },
     );
-    let apiResponse = await response; // parses JSON response into native JavaScript objects
+    let apiResponse = await response.json(); // parses JSON response into native JavaScript objects
     console.log(apiResponse);
   }
 }

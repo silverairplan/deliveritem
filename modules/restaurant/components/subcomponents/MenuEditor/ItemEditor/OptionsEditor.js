@@ -3,7 +3,7 @@ import {Input, Button, Icon, Text, ListItem} from 'react-native-elements';
 import React from 'react';
 import {isValidPrice} from './AttributeValidator';
 import {isUniqueOption} from '../MenuUtilities';
-import {Picker} from '@react-native-community/picker';
+// import {Picker} from '@react-native-community/picker';
 
 export function EditOptions(props) {
   return (
@@ -147,7 +147,7 @@ const minMaxEditor = props => {
         <>
           <View>
             <Text style={styles.titles}>Minumum</Text>
-            <Picker
+            {/* <Picker
               selectedValue={props.option.minimum}
               style={styles.statusPicker}
               onValueChange={(itemValue, itemIndex) => {
@@ -169,7 +169,7 @@ const minMaxEditor = props => {
               {maximumPickerOptions.map(picker => {
                 return picker;
               })}
-            </Picker>
+            </Picker> */}
             <Button
               title="Confirm"
               onPress={() => {

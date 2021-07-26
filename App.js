@@ -16,17 +16,15 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Restaurant from './modules/restaurant/Restaurant';
 import Amplify from 'aws-amplify';
 import {Auth} from 'aws-amplify';
-import {withAuthenticator,SignUp,
+import {withAuthenticator,
   ConfirmSignIn,
-  ConfirmSignUp,
-  ForgotPassword,
   VerifyContact,
   Greetings,
   Loading,
   RequireNewPassword} from 'aws-amplify-react-native';
 import awsconfig from './aws-exports';
 import {ActivityIndicator} from 'react-native';
-import {Signin,Signup} from './modules/authentication'
+import {Signin,Signup,ConfirmSignup,ForgotPassword} from './modules/authentication'
 
 
 Amplify.configure({
@@ -35,6 +33,8 @@ Amplify.configure({
     disabled: true,
   },
 });
+
+console.disableYellowBox = true;
 
 //var userId;
 
@@ -48,7 +48,8 @@ class App extends React.Component {
       name: '',
       protoUrl: '',
       loading: true,
-      orders:{Orders:[]}
+      orders:{Orders:[]},
+      restaurants:[]
     };
   }
   async componentDidMount() {
@@ -79,10 +80,12 @@ class App extends React.Component {
       orders:retrievedData.orders,
       isRestaurant: rest,
       loading: false,
+      restaurants:retrievedData.restaurants??[]
     });
     async function getUserTable(dynamoId) {
       const body = JSON.stringify({
         incoming_Id: dynamoId,
+        is_customer:true
       });
       let token = null;
       let prom = Auth.currentSession().then(
@@ -109,7 +112,7 @@ class App extends React.Component {
       );
       let data = await response.json(); // parses JSON response into native JavaScript objects
 
-      console.log('responsedata',data)
+      console.log('data',data)
       return data;
     }
   }
@@ -121,7 +124,7 @@ class App extends React.Component {
           {this.state.isRestaurant ? (
             <Restaurant name={this.state.name} data={this.state.data} orders={this.state.orders} />
           ) : (
-            <Customer name={this.state.name} data={this.state.data} />
+            <Customer name={this.state.name} data={this.state.data} restaurants={this.state.restaurants}/>
           )}
         </NavigationContainer>
       );
@@ -231,8 +234,8 @@ export default withAuthenticator(App,false,[
   <Signin/>,
   <ConfirmSignIn/>,
   <VerifyContact/>,
-  <SignUp signUpConfig={signUpConfig}/>,
-  <ConfirmSignUp/>,
+  <Signup/>,
+  <ConfirmSignup/>,
   <ForgotPassword />,
   <RequireNewPassword />,
   <Greetings />

@@ -2,7 +2,7 @@
 import {View, StyleSheet, Alert} from 'react-native';
 import {Input, Button, Icon, Text} from 'react-native-elements';
 import React, {useState} from 'react';
-import {Picker} from '@react-native-community/picker';
+
 import {Dimensions} from 'react-native';
 import {validatePrice, validateDistance} from './AttributeValidator';
 import {updateDynamoRestaurant} from './updateDynamoRest';
@@ -39,7 +39,7 @@ export function EditTextAttribute(props) {
           }}
         />
         <View style={{flexDirection: 'row'}}>
-          <Picker
+          {/* <Picker
             selectedValue={addressState}
             style={{
               width: windowWidth / 3,
@@ -55,7 +55,7 @@ export function EditTextAttribute(props) {
             }}>
             <Picker.Item label={'State'} value={''} />
             <Picker.Item label={'CA'} value={'CA'} />
-          </Picker>
+          </Picker> */}
           <Input
             placeholder={'Zip'}
             inputContainerStyle={{

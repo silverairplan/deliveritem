@@ -16,8 +16,9 @@ import {
 // import {autoShowTooltip} from 'aws-amplify';
 
 export default function AddItemToCart({navigation, route}) {
+  console.log(route.params.item);
   // MAKE A NEW REFERENCE OBJECT TO MUTATE, OTHERWISE IT WILL MUTATE THE ORIGINAL ITEM
-  let itemToAdd = JSON.parse(JSON.stringify(route.params.item)); //menu item will be passed back and added to the order
+  let itemToAdd = route.params.item; //menu item will be passed back and added to the order
   //item should follow the structure of the items in the Order json so we can push it on the end of the list
   const {options, itemName, itemDescription} = itemToAdd;
 
@@ -96,9 +97,7 @@ export default function AddItemToCart({navigation, route}) {
     CREATES AN ARRAY OF ARRAYS BASED ON THE NUMBER OF OPTIONS.
     USED TO KEEP TRACK OF WHAT OPTIONS HAS BEEN SELECTED.
   */
-  const [selectOptions, setSelectOptions] = useState(
-    Array(itemToAdd.options.length).fill([]),
-  );
+  const [selectOptions, setSelectOptions] = useState([]);
 
   /*
     INPUTS: OPTION ITEM NAME, OPTION INDEX
@@ -134,18 +133,18 @@ export default function AddItemToCart({navigation, route}) {
     UPDATE ITEM SHAPE BEFORE ADDING TO CART
   */
   const updateItemShape = () => {
-    let updatedOptions = options.map((option, index) => {
-      let filteredItems = option.optionList.filter(({optionName}) =>
-        selectOptions[index].includes(optionName),
-      );
+    // let updatedOptions = options.map((option, index) => {
+    //   let filteredItems = option.optionList.filter(({optionName}) =>
+    //     selectOptions[index].includes(optionName),
+    //   );
 
-      return {
-        ...option,
-        optionList: filteredItems,
-      };
-    });
+    //   return {
+    //     ...option,
+    //     optionList: filteredItems,
+    //   };
+    // });
 
-    itemToAdd.options = updatedOptions;
+    //itemToAdd.options = updatedOptions;
 
     // TODO: ADD SPECIAL INSTRUCTIONS
     itemToAdd.specialInstructions = specialInstructions;
@@ -158,7 +157,7 @@ export default function AddItemToCart({navigation, route}) {
   const validateItem = () => {
     let valid = true;
 
-    options.forEach(({minimum}, index) => {
+    options?.forEach(({minimum}, index) => {
       if (selectOptions[index].length < minimum) {
         valid = false;
       }
@@ -187,42 +186,41 @@ export default function AddItemToCart({navigation, route}) {
           resizeMethod="scale"
           resizeMode="center"
           // TODO: change this to itemToAdd.itemPic
-          source={require('../../assets/chicken-fajita-burrito.jpg')}
+          source={{uri: itemToAdd.picture}}
         />
       </View>
       <Text style={styles.itemName}>{itemName}</Text>
       <Text style={styles.itemDescription}>{itemDescription}</Text>
       <Divider style={styles.divider} />
       {/* CONDITIONALLY RENDER JUST IN CASE RESTAURANTS DO NOT OFFER CUSTOMIZATIONS */}
-      {options.length > 0 &&
-        options.map(({optionList, optionTitle, minimum}, optionsIndex) => {
-          return (
-            <View key={optionTitle}>
-              {/* TODO: POSSIBLY DISPLAY MIN/MAX FOR USERS */}
-              <Text style={styles.itemOptionTitle}>
-                {optionTitle}{' '}
-                <Text style={minimum > 0 && styles.itemOptionSubtitle}>
-                  {minimum > 0 ? ' (Required)' : ' (Optional)'}
-                </Text>
+      {options?.map(({optionList, optionTitle, minimum}, optionsIndex) => {
+        return (
+          <View key={optionTitle}>
+            {/* TODO: POSSIBLY DISPLAY MIN/MAX FOR USERS */}
+            <Text style={styles.itemOptionTitle}>
+              {optionTitle}{' '}
+              <Text style={minimum > 0 && styles.itemOptionSubtitle}>
+                {minimum > 0 ? ' (Required)' : ' (Optional)'}
               </Text>
+            </Text>
 
-              {optionList.map(({optionName}) => {
-                return (
-                  <View key={optionName}>
-                    <CheckBox
-                      title={optionName}
-                      containerStyle={styles.optionListContainer}
-                      checkedIcon="circle"
-                      uncheckedIcon="circle-o"
-                      checked={selectOptions[optionsIndex].includes(optionName)}
-                      onPress={() => selectHandler(optionName, optionsIndex)}
-                    />
-                  </View>
-                );
-              })}
-            </View>
-          );
-        })}
+            {optionList.map(({optionName}) => {
+              return (
+                <View key={optionName}>
+                  <CheckBox
+                    title={optionName}
+                    containerStyle={styles.optionListContainer}
+                    checkedIcon="circle"
+                    uncheckedIcon="circle-o"
+                    checked={selectOptions[optionsIndex].includes(optionName)}
+                    onPress={() => selectHandler(optionName, optionsIndex)}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        );
+      })}
       {/* TODO: Create input for special instructions - temporary placeholder */}
       <View>
         <Text style={styles.itemOptionTitle}>Special Instructions</Text>
@@ -237,6 +235,7 @@ export default function AddItemToCart({navigation, route}) {
         <Button
           type="solid"
           title="Add to Cart"
+          buttonStyle={styles.buttonStyle}
           onPress={() => {
             // console.log(itemToAdd.itemPrice);
             addItemToCart();
@@ -316,6 +315,8 @@ const styles = StyleSheet.create({
   addToCartButton: {
     flex: 1,
     justifyContent: 'flex-end',
+    paddingLeft: 15,
+    paddingRight: 15,
   },
   button: {
     alignSelf: 'center',
@@ -330,5 +331,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
     width: 75,
     height: 75,
+  },
+  buttonStyle: {
+    backgroundColor: '#F86D64',
+    paddingTop: 15,
+    paddingBottom: 15,
+    borderRadius: 5,
   },
 });

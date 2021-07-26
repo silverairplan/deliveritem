@@ -8,13 +8,20 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
 var data;
+var restaurants = [];
 
 export default class Customer extends React.Component {
   constructor(props) {
     super(props);
     console.log(props.data);
-    this.state = {name: props.name, protoUrl: '', data: props.data};
+    this.state = {
+      name: props.name,
+      protoUrl: '',
+      data: props.data,
+      restaurants: props.restaurants,
+    };
     data = this.state.data;
+    restaurants = this.state.restaurants;
   }
 
   render() {
@@ -29,7 +36,7 @@ function NavigationBar() {
       <Tab.Screen
         name="Home"
         component={RestaurantList}
-        initialParams={{data: data}}
+        initialParams={{restaurants, data}}
       />
       <Tab.Screen name="Orders" component={Orders} />
       <Tab.Screen

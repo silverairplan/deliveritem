@@ -330,13 +330,14 @@ function Attributes({navigation, route}) {
     }
 
     return (
-      <ScrollView>
+      <ScrollView style={{backgroundColor:'white'}}>
         <Text h4 style={styles.titles}>
           {attributeString}
         </Text>
         <View>
           <Input
-            label={route.params.item.restaurantInfo.restaurantType.typeTags}
+            inputStyle={styles.input}
+            inputContainerStyle={{borderBottomWidth:0}}
             placeholder={'New Tag'}
             onChangeText={value => {
               updatedValue = value;
@@ -386,7 +387,6 @@ function Attributes({navigation, route}) {
           })}
         </ScrollView>
         <Button
-          icon={<Icon name="check" size={20} color="white" />}
           title=" Save Changes"
           buttonStyle={styles.saveTags}
           onPress={() => {
@@ -463,5 +463,20 @@ const styles = StyleSheet.create({
   saveTags: {
     marginTop: 15,
     marginBottom: 25,
+    marginLeft:15,
+    marginRight:15,
+    backgroundColor:'#F86D64',
+    paddingTop:15,
+    paddingBottom:15,
+    borderRadius:5
+  },
+  input:{
+    backgroundColor:'white',
+    borderColor:'#979797',
+    borderWidth:1,
+    borderRadius:8,
+    paddingLeft:11,
+    paddingTop:8,
+    paddingBottom:8
   },
 });

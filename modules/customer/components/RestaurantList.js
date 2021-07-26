@@ -14,18 +14,20 @@ const Stack = createStackNavigator();
 export default class RestaurantList extends React.Component {
   constructor(props) {
     super(props);
-    let restaurants = fetchRestaurants();
     this.state = {
       signedIn: false,
       address: 'g',
       name: '',
       protoUrl: '',
-      restaurantList: restaurants,
+      restaurantList: props.route.params.restaurants,
+      profile: props.route.params.data,
     };
+
     //console.log(JSON.parse(props.route.params.data).userData);
   }
 
   render() {
+    console.log('restaurantlist', this.state.profile);
     return (
       <Stack.Navigator
         initialRouteName="OrderStack"
@@ -36,6 +38,7 @@ export default class RestaurantList extends React.Component {
           component={OrderStackStructure}
           initialParams={{
             restaurantList: this.state.restaurantList,
+            profile: this.state.profile,
           }}
           options={({navigation, route}) => ({
             title: 'Deliver to 12345 Test St',
@@ -97,8 +100,12 @@ const OrderStackStructure = ({navigation, route}) => {
       <OrderStack.Screen
         name="Order Review"
         component={OrderReview}
+        initialParams={{
+          profile: route.params.profile,
+        }}
         options={({navigation, route}) => ({
           title: 'Checkout',
+          profile: route.params.profile,
         })}
       />
       <OrderStack.Screen

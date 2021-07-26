@@ -1,7 +1,7 @@
 import {View, StyleSheet} from 'react-native';
 import {Button, Text} from 'react-native-elements';
 import React from 'react';
-import {Picker} from '@react-native-community/picker';
+// import {Picker} from '@react-native-community/picker';
 
 export default function AddressSelect(props) {
   let addressPickerOptions = getAddressPickerOptions();
@@ -14,7 +14,7 @@ export default function AddressSelect(props) {
       </View>
       <>
         <View>
-          <Picker
+          {/* <Picker
             selectedValue={props.address}
             style={styles.statusPicker}
             onValueChange={(itemValue, itemIndex) => {
@@ -24,7 +24,7 @@ export default function AddressSelect(props) {
             {addressPickerOptions.map(picker => {
               return picker;
             })}
-          </Picker>
+          </Picker> */}
           <Button
             title="Confirm"
             onPress={() => {

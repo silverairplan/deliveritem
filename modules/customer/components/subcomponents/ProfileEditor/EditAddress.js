@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import {Button, Text, Icon} from 'react-native-elements';
-import {Picker} from '@react-native-community/picker';
+// import {Picker} from '@react-native-community/picker';
 import {updateDynamoCustomer} from './updateDynamoCustomer';
 var dataType;
 var currentDisplay;
@@ -41,7 +41,7 @@ export class EditAddress extends React.Component {
             <Text h4 style={styles.orderStatus}>
               {'Default Address'}
             </Text>
-            <Picker
+            {/* <Picker
               selectedValue={this.state.currentDisplay}
               style={styles.statusPicker}
               onValueChange={itemValue => {
@@ -60,7 +60,7 @@ export class EditAddress extends React.Component {
                   />
                 );
               })}
-            </Picker>
+            </Picker> */}
             <Button
               title=" Set Default Address"
               icon={<Icon name="check" size={15} color="white" />}
